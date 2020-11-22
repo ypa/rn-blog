@@ -7,7 +7,18 @@ const IndexScreen = ({ navigation }) => {
   const { state, deleteBlogPost, getBlogPosts } = useContext(Context);
 
   useEffect(() => {
+    // Fetch posts when it first renders
     getBlogPosts();
+
+    // Refetch posts when it comes back from navigation
+    const listener = navigation.addListener('didFocus', () => {
+      getBlogPosts();
+    });
+
+    // useEffect's clean up code when component unmounts
+    return () => {
+      listener.remove();  // to prevent memory leaks and other bad stuff
+    };
   }, []);
 
   return (
